@@ -1,5 +1,8 @@
 import App from './App'
 
+import 'utils/http.js'
+import 'utils/utils.js'
+
 // #ifndef VUE3
 import Vue from 'vue'
 Vue.config.productionTip = false
