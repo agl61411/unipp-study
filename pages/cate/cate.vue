@@ -1,5 +1,6 @@
 <template>
 	<view>
+		<my-search @click="gotoSearch"></my-search>
 		<view class="scroll-view-container">
 			<scroll-view class="left-scroll-view" scroll-y="true" :style="{height: wh + 'px'}">
 				<block v-for="(cate, index) in cateList" :key="cate.cat_id">
@@ -48,11 +49,16 @@
 				uni.navigateTo({
 					url: `/subpkg/goods_list/goods_list?cid=${cate3.cat_id}`
 				})
+			},
+			gotoSearch() {
+				uni.navigateTo({
+					url: '/subpkg/search/search'
+				})
 			}
 		},
 		onLoad() {
 			const sysInfo = uni.getSystemInfoSync()
-			this.wh = sysInfo.windowHeight
+			this.wh = sysInfo.windowHeight - 50
 			
 			this.getCateList()
 		}

@@ -28,15 +28,20 @@
 	],
 	"subPackages": [{
 		"root": "subpkg",
-		"pages": [
-			{
-				"path": "goods_detail/goods_detail",
-				"style": {
-					"enablePullDownRefresh": false
-				}
+		"pages": [{
+			"path": "goods_detail/goods_detail",
+			"style": {
+				"enablePullDownRefresh": false
 			}
-		    ,{
-                    "path" : "goods_list/goods_list",
+		}, {
+			"path": "goods_list/goods_list",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}    ,{
+                    "path" : "search/search",
                     "style" :                                                                                    
                 {
                     "navigationBarTitleText": "",
