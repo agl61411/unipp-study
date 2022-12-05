@@ -8,25 +8,73 @@
 			合计：<text class="amount">￥{{checkedGoodsAmount}}</text>
 		</view>
 		
-		<view class="btn-settle">
-			结算({{checkedCount}})
-		</view>
+		<view class="btn-settle" @click="settlement">结算({{checkedCount}})</view>
 	</view>
 </template>
 
 <script>
-	import { mapGetters, mapMutations } from 'vuex'
+	import { mapGetters, mapMutations, mapState } from 'vuex'
 	export default {
+		data() {
+			return {
+				seconds: 3,
+				timer: null
+			}
+		},
 		computed: {
 			...mapGetters('m_cart', ['checkedCount', 'total', 'checkedGoodsAmount']),
+			...mapGetters('m_user', ['fullAddress']),
+			...mapState('m_user', ['token']),
 			isFullCheck() {
 				return this.total === this.checkedCount
 			}
 		},
 		methods: {
 			...mapMutations('m_cart', ['updateAllGoodsState']),
+			...mapMutations('m_user', ['updateRedirectInfo']),
 			changeAllState() {
 				this.updateAllGoodsState(!this.isFullCheck)
+			},
+			settlement() {
+				if (!this.checkedCount) return uni.$showMsg('请选择要结算的商品！')
+				if (!this.fullAddress) return uni.$showMsg('请选择收货地址！')
+				// if (!this.token) return uni.$showMsg('请先登录！')
+				
+				if (!this.token) return this.delayNavigate()
+			},
+			delayNavigate() {
+				this.seconds = 3
+				this.showTips(this.seconds)
+				
+				this.timer = setInterval(() => {
+					this.seconds--
+					
+					if (this.seconds <= 0) {
+						clearInterval(this.timer)
+						this.timer = null
+						uni.switchTab({
+							url: '/pages/my/my',
+							success: () => {
+								this.updateRedirectInfo({
+									openType: 'switchTab',
+									from: '/pages/cart/cart'
+								})
+							}
+						})
+						
+						return
+					}
+					
+					this.showTips(this.seconds)
+				}, 1000)
+			},
+			showTips(n) {
+				uni.showToast({
+					icon: 'none',
+					title: '请登录后再结算！' + n + '秒之后自动跳转到登录页',
+					mask: true,
+					duration: 1500
+				})
 			}
 		}
 	}
